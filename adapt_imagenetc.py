@@ -1,6 +1,5 @@
 '''
-python adapt_imagenetc.py --dset imagenetc --gpu_id 0 --output_src ckps/source/ --output ckps/adapt --batch_size 17 --max_iterations 5
-
+python adapt_imagenetc.py --dset imagenetc --gpu_id 2 --output_src ckps/source/ --output ckps/adapt --batch_size 8 --max_iterations 10
 '''
 import argparse
 import os
@@ -430,7 +429,6 @@ def train_target(args):
         param_group = []
         param_domain_group = []
         modelpath = args.output_dir_src[i] + '/source_F.pt'
-        modelpath = '/home/yxue/MSFDA-main/' + modelpath
         print(modelpath)
         netF_list[i].load_state_dict(torch.load(modelpath))
         netF_list[i].eval()
@@ -438,7 +436,6 @@ def train_target(args):
             param_group += [{'params': v, 'lr': args.lr * args.lr_decay1}]
 
         modelpath = args.output_dir_src[i] + '/source_B.pt'
-        modelpath = '/home/yxue/MSFDA-main/' + modelpath
         print(modelpath)
         netB_list[i].load_state_dict(torch.load(modelpath))
         netB_list[i].eval()
@@ -446,7 +443,6 @@ def train_target(args):
             param_group += [{'params': v, 'lr': args.lr * args.lr_decay2}]
 
         modelpath = args.output_dir_src[i] + '/source_C.pt'
-        modelpath = '/home/yxue/MSFDA-main/' + modelpath
         print(modelpath)
         netC_list[i].load_state_dict(torch.load(modelpath))
         netC_list[i].eval()
@@ -594,7 +590,7 @@ if __name__ == "__main__":
         args.output_dir_src.append(osp.join(args.output_src, args.dset, args.src[i]))
     print(args.output_dir_src)
 
-    for t in range(1):
+    for t in range(5):
         args.t = t
         args.name_tar = names[args.t]
         
@@ -618,4 +614,3 @@ if __name__ == "__main__":
             f.close()
             t2 = time.time()
             print(f'batch time: {t2-t1}')
-            break
