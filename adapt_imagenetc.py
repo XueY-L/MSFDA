@@ -1,5 +1,5 @@
 '''
-python adapt_imagenetc.py --dset imagenetc --gpu_id 2 --output_src ckps/source/ --output ckps/adapt --batch_size 8 --max_iterations 10
+python adapt_imagenetc.py --dset imagenetc --gpu_id 3 --output_src ckps/source/ --output ckps/adapt --batch_size 8 --max_iterations 10 --worker 4
 '''
 import argparse
 import os
@@ -280,10 +280,10 @@ def retrain_model(netF_list, netB_list, netC_list, netD, optim_group, optim_doma
             inputs_c, target_c, tar_idx_c = next(iter_test_c)
             inputs_u, _, tar_idx_u = next(iter_test_u)
         # 为了让bn能forward
-        if inputs_c.size(0) <= 2:
+        if inputs_c.size(0) < 2:
             inputs_c = inputs_c.squeeze(0)
             inputs_c = torch.stack((inputs_c, inputs_c))
-        if inputs_u.size(0) <= 2:
+        if inputs_u.size(0) < 2:
             inputs_u = inputs_u.squeeze(0)
             inputs_u = torch.stack((inputs_u, inputs_u))
         # if inputs_c.size(0) <= 2 or inputs_u.size(0) <=2:
@@ -597,7 +597,7 @@ if __name__ == "__main__":
         args.output_dir_src.append(osp.join(args.output_src, args.dset, args.src[i]))
     print(args.output_dir_src)
 
-    for t in range(1):
+    for t in range(3, 5):
         args.t = t
         args.name_tar = names[args.t]
         
@@ -612,7 +612,7 @@ if __name__ == "__main__":
         args.out_file.write(print_args(args) + '\n')
         args.out_file.flush()
 
-        for i in range(2, 5000//50):
+        for i in range(5000//50):
             t1 = time.time()
             args.batch_idx = i
             acc = train_target(args)
