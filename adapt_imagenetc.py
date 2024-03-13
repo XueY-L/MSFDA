@@ -1,5 +1,5 @@
 '''
-python adapt_imagenetc.py --dset imagenetc --gpu_id 3 --output_src ckps/source/ --output ckps/adapt --batch_size 8 --max_iterations 10 --worker 4
+python adapt_imagenetc.py --dset imagenetc --gpu_id 1 --output_src ckps/source/ --output ckps/adapt --batch_size 8 --max_iterations 10 --worker 4
 '''
 import argparse
 import os
@@ -253,8 +253,14 @@ def retrain_model(netF_list, netB_list, netC_list, netD, optim_group, optim_doma
             l_ls.append((data[0], label[0]))
         else:
             u_ls.append((data[0], label[0]))
-    l_dset = TempSet(l_ls)
-    u_dset = TempSet(u_ls)
+    if len(l_ls) == 0:
+        l_dset = TempSet([u_ls[0]])
+    else:
+        l_dset = TempSet(l_ls)
+    if len(u_ls) == 0:
+        u_dset = TempSet([l_ls[0]])
+    else:
+        u_dset = TempSet(u_ls)
     dset_loaders = {}
     dset_loaders["D_l"] = DataLoader(l_dset, batch_size=args.batch_size, shuffle=True, num_workers=args.worker, drop_last=False)
     dset_loaders["D_u"] = DataLoader(u_dset, batch_size=args.batch_size, shuffle=True, num_workers=args.worker, drop_last=False)
@@ -597,7 +603,7 @@ if __name__ == "__main__":
         args.output_dir_src.append(osp.join(args.output_src, args.dset, args.src[i]))
     print(args.output_dir_src)
 
-    for t in range(3, 5):
+    for t in range(8, 10):
         args.t = t
         args.name_tar = names[args.t]
         
