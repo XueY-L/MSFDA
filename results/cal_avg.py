@@ -1,4 +1,4 @@
-path = '/home/yxue/MSFDA/results/ImageNetC_ggsj_target-zoom_blur_bs8_iter10.txt'
+path = '/home/yxue/MSFDA/results/ImageNetC_ggsj_target-brightness_bs8_iter10.txt'
 
 f = open(path, 'r')
 
