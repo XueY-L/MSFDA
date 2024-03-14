@@ -254,11 +254,11 @@ def retrain_model(netF_list, netB_list, netC_list, netD, optim_group, optim_doma
         else:
             u_ls.append((data[0], label[0]))
     if len(l_ls) == 0:
-        l_dset = TempSet([u_ls[0]])
+        l_dset = TempSet([u_ls[0], u_ls[0]])
     else:
         l_dset = TempSet(l_ls)
     if len(u_ls) == 0:
-        u_dset = TempSet([l_ls[0]])
+        u_dset = TempSet([l_ls[0], l_ls[0]])
     else:
         u_dset = TempSet(u_ls)
     dset_loaders = {}
@@ -603,7 +603,7 @@ if __name__ == "__main__":
         args.output_dir_src.append(osp.join(args.output_src, args.dset, args.src[i]))
     print(args.output_dir_src)
 
-    for t in [3, 4]:
+    for t in [3]:
         args.t = t
         args.name_tar = names[args.t]
         
